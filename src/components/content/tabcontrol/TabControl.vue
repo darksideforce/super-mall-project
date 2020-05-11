@@ -32,6 +32,8 @@ export default {
     //注意点击追踪循环的元素时，需要向事件内部传递index值
     itemclick(index){
       this.CurrentIndex = index;
+      this.$emit('tabclick',index)
+      //向外部传递自定义点击事件，为切换商品页面准备
     }
   }
 }

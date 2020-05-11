@@ -1,13 +1,113 @@
 <template>
-    <h2>分类</h2>
+    <div><h2>分类</h2>
+    <div class = 'wrapper'>
+      <ul class = 'content'>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+        <li>列表1</li>
+
+      </ul>
+    </div>
+    </div>
 </template>
 
 <script>
+import BScroll from 'better-scroll'
 export default {
-    name:'Category'
+    name:'Category',
+    data(){
+      return{
+        scroll
+      }
+    },
+    mounted(){
+      console.log(document.querySelector('.wrapper'))
+      this.scroll = new BScroll(document.querySelector('.wrapper'))
+    }
 }
 </script>
 
 <style>
-
+.wrapper{
+  height:140px;
+  background-color: red;
+}
 </style>

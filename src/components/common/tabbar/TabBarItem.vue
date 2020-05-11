@@ -17,10 +17,12 @@
     },
     computed: {
 			isActive() {
-				return this.$route.path.indexOf(this.link) !== -1
+        return this.$route.path.indexOf(this.link) !== -1
+        //判断当前点击的是否是当前页面
       },
       activeStyle() {
-				return this.isActive ? {'color': 'red'} : {}
+        return this.isActive ? {'color': 'red'} : {}
+        //动态绑定样式
       }
     },
     methods: {
