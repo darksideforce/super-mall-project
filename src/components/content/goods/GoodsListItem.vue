@@ -1,6 +1,6 @@
 <template>
   <div class = 'goods-item'>
-    <img :src='goodsItem.show.img' url=''>
+    <img :src='goodsItem.show.img' url='' @load = 'imgload'>
     <div class = 'goods-info'>
       <p class ='title'>{{goodsItem.title}}</p>
       <span class = 'price'>{{goodsItem.price}}</span>
@@ -18,6 +18,11 @@ export default {
       default(){
         return {}
       }
+    }
+  },
+  methods:{
+    imgload(){
+      this.$bus.$emit('ItemImageLoad')
     }
   }
 }
