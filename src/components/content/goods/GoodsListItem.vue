@@ -1,5 +1,5 @@
 <template>
-  <div class = 'goods-item'>
+  <div class = 'goods-item' @click ='itemclick' >
     <img :src='goodsItem.show.img' url='' @load = 'imgload'>
     <div class = 'goods-info'>
       <p class ='title'>{{goodsItem.title}}</p>
@@ -23,7 +23,11 @@ export default {
   methods:{
     imgload(){
       this.$bus.$emit('ItemImageLoad')
-    }
+      //把加载完成的事件上传到事件总线
+    },
+    itemclick(){
+      this.$router.push('/detail/' + this.goodsItem.iid)
+    }//在点击时候后，跳转到动态路由
   }
 }
 </script>

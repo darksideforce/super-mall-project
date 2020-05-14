@@ -52,8 +52,11 @@ export default {
       this.scroll && this.scroll.finishPullUp()
     },
     refresh(){
-      console.log('...');
       this.scroll&&this.scroll.refresh()
+    },
+    getscrolly(){
+      return this.scroll ? tshi.scroll.y :0
+      //意思是，如果scroll无值，则返回0，如果有值，则返回y值
     }
   }
 }

@@ -4,13 +4,21 @@
     <!--设置了一个div包含档前的slot  -->
         <div slot="center">购物街</div>
     </nav-bar>
+    <tab-control 
+                  :titles = "['流行','新款','精选']" 
+                  @tabclick = 'tabClick'
+                  ref = 'TabControl1'
+                  class = 'tabcontrol'
+                  v-show = 'isTabFixed'></tab-control>
+                  <!--复制一个tabcontrol，用于显示滚动后的导航栏 -->
     <scroll class='content' ref ='scrolls' :probe-type = '3' @scrollP = 'contentscroll' :pull-up-load = 'true' @pulling = 'contentpulling'><!--使用滚动scroll的组件-->
-      <home-swiper :banners='banners'></home-swiper><!--这是一个轮播图 -->
+      <home-swiper :banners='banners' @swiperImageLoad = 'swiperimageload'></home-swiper><!--这是一个轮播图 -->
       <recommend-view :recommends = 'recommends'></recommend-view><!--这是一个推荐页面-->
       <feature-view></feature-view><!--这是一个feature-->
       <tab-control 
-                  :titles = "['流行','新款','精选']" class = 'tabcontrol'
-                  @tabclick = 'tabClick'></tab-control><!--这是tab- bar -->
+                  :titles = "['流行','新款','精选']" 
+                  @tabclick = 'tabClick'
+                  ref = 'TabControl2'></tab-control><!--这是tab- bar -->
       <goods-list 
                   :goods = "goods[currentType].list"
       ></goods-list><!--这是商品页面  -->
@@ -65,7 +73,10 @@ data() {
       //每当当前页面往下刷新时，page记录当前用户加载到第几页，
       //而list储存的是当前加载了的所有数据
     },
-    backtopshow:false
+    backtopshow:false,
+    tabOffsetTop:0,
+    isTabFixed:false,
+    saveY:0,
     };
 },
 created(){
@@ -83,6 +94,18 @@ mounted(){
           refresh()
         })
 },
+destroyed(){
+  console.log('homedestroyed')
+},
+activated() {
+  this.$refs.scrolls.scrollTo(0,this.saveY,0)
+  this.$refs.scrolls.refresh()
+},
+//跳转到离开时，scroll记载的滚动位置
+deactivated() {
+  this.saveY = this.$refs.scrolls.getscrolly
+},
+//在离开时，记录滚动的位置
 methods:{
   /**
    * 事件监听相关方法
@@ -110,6 +133,8 @@ methods:{
         this.currentType = 'sell'
         break
     }
+    this.$refs.TabControl1.CurrentIndex = index
+    this.$refs.TabControl2.CurrentIndex = index
   },
   //根据点击判断当前选择的tab
   backclick(){
@@ -117,13 +142,20 @@ methods:{
   },
   //点击回到首页
   contentscroll(position){
+    //1.根据position来动态显示
     this.backtopshow = (-position.y)>1000
+    //2.根据offsettop的值来决定是否吸顶
+    this.isTabFixed = (-position.y) > this.tabOffsetTop
   },
   //滚动到一定页面时隐藏插件
   contentpulling(){
     this.getHomeGoods(this.currentType)
   },
+  //获取下拉数据
+  swiperimageload(){
+    this.tabOffsetTop = this.$refs.TabControl2.$el.offsetTop
 
+  },
   /**
    *网络请求相关代码 
    * */
@@ -151,26 +183,19 @@ methods:{
 
 <style scoped>
 #home{
-  padding-top:44px;
   height:100vh;
+  position:relative;
 }
 .home-nav {
     background-color: #ff8198;
     color: white;
-    position: fixed;
-    left:0px;
-    right:0px;
-    top:0px;
-    z-index:99;
 }
-
-.tabcontrol{
-  position:sticky;
-  top:44px;
-  z-index: 99;
+.tabcontrol {
+  position:relative;
+  z-index: 9;
 }
 .content{
-  overflow:hidden;
+  overflow: hidden;
   position: absolute;
   top:44px;
   bottom:49px;

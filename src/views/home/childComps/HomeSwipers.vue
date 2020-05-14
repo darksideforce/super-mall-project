@@ -6,7 +6,7 @@
         <swiper-item v-for="(item,key) in banners" :key="key">
           <!--现在v-for必须指定key       -->
             <a :href="item.link">
-                <img :src="item.image" alt />
+                <img :src="item.image" alt  @load = 'imgload'>
             </a>
         </swiper-item>
     </swiper>
@@ -29,9 +29,23 @@ export default {
       }
     }
   },
+  data(){
+    return{
+      isLoad:false
+    }
+  },
   components:{
     Swiper,
     SwiperItem
+  },
+  methods:{
+    imgload(){
+      if(!this.isLoad){
+        this.$emit('swiperImageLoad')
+        this.isLoad = true
+        //简化般的节流器
+      }
+    }
   }
 }
 </script>

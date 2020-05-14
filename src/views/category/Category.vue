@@ -1,6 +1,6 @@
 <template>
     <div><h2>分类</h2>
-    <div class = 'wrapper'>
+    <div class = 'wrapper' ref = 'aaa' >
       <ul class = 'content'>
         <li>列表1</li>
         <li>列表1</li>
@@ -83,7 +83,6 @@
         <li>列表1</li>
         <li>列表1</li>
         <li>列表1</li>
-
       </ul>
     </div>
     </div>
@@ -95,12 +94,11 @@ export default {
     name:'Category',
     data(){
       return{
-        scroll
+        scroll:null
       }
     },
     mounted(){
-      console.log(document.querySelector('.wrapper'))
-      this.scroll = new BScroll(document.querySelector('.wrapper'),{
+      this.scroll = new BScroll(this.$refs.aaa,{
         probeType:3,
         pullUpLoad:true
       })
@@ -109,14 +107,18 @@ export default {
       })
       this.scroll.on('pullingUp',()=>{
         console.log('上拉加载更多')
-      })
+      }),
+      this.scroll.refresh()
+    },
+    destroyed(){
+      console.log('home destoryed')
     }
 }
 </script>
-
-<style>
+<style scoped>
 .wrapper{
   height:140px;
   background-color: red;
+  overflow: hidden;
 }
-</style>
+</style scoped>
