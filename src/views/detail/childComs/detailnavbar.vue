@@ -17,6 +17,7 @@
 
 <script>
 import NavBar from 'components/common/navbar/NavBar'
+
 export default {
   name:'DetailNavBar',
   components:{
@@ -49,6 +50,6 @@ export default {
   flex:1
 }
 .active{
-  color:red;
+  color:rgb(255, 0, 0);
 }
 </style scoped>

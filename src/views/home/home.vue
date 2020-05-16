@@ -94,9 +94,6 @@ mounted(){
           refresh()
         })
 },
-destroyed(){
-  console.log('homedestroyed')
-},
 activated() {
   this.$refs.scrolls.scrollTo(0,this.saveY,0)
   this.$refs.scrolls.refresh()
