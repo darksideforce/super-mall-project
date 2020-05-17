@@ -110,11 +110,14 @@ methods:{
    */
   debounce(func,delay){
     let timer = null
-    return function(args){
+    //创建一个变量储存计时器
+    return function(...args){
       if(timer)clearTimeout(timer)
+      //如果有计时器，则清空
       timer = setTimeout(()=>{
         func.apply(this,args)
       },delay)
+      //创建一个节流器
     }
   },
   //节流器
@@ -151,7 +154,6 @@ methods:{
   //获取下拉数据
   swiperimageload(){
     this.tabOffsetTop = this.$refs.TabControl2.$el.offsetTop
-
   },
   /**
    *网络请求相关代码 

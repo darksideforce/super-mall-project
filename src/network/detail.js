@@ -21,6 +21,13 @@ export class  goods{
     this.nowPrice = itemInfo.lowNowPrice;
   }
 }
+export class goodsparam{
+  constructor(info,rule){
+    this.image = info.images ? info.images[0] : '';
+    this.info = info.set;
+    this.sizes = rule.tables;
+  }
+}  
 
 export class shop{
   constructor(shopInfo){
