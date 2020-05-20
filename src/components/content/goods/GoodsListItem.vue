@@ -1,6 +1,6 @@
 <template>
   <div class = 'goods-item' @click ='itemclick' >
-    <img :src='goodsItem.show.img' url='' @load = 'imgload'>
+    <img :src='showImage' url='' @load = 'imgload'>
     <div class = 'goods-info'>
       <p class ='title'>{{goodsItem.title}}</p>
       <span class = 'price'>{{goodsItem.price}}</span>
@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import {debounce} from '@/common/utils'
 export default {
   name:'GoodsListItem',
   props:{
@@ -20,9 +21,25 @@ export default {
       }
     }
   },
+  data(){
+    return{
+      Dhomeimg:null
+    }
+  },
+  computed:{
+    showImage(){
+      return this.goodsItem.image || this.goodsItem.show.img
+    }
+  },
+  created(){
+  },
   methods:{
     imgload(){
-      this.$bus.$emit('ItemImageLoad')
+      //if(this.$route.path.indexOf('/home')){
+        //this.$bus.$emit('homeItemImgLoad')
+      //}else if(this.$route.path.indexOf('/detail')){
+        this.$bus.$emit('detailItemImgLoad')
+      //}
       //把加载完成的事件上传到事件总线
     },
     itemclick(){
@@ -32,7 +49,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .goods-item {
     padding-bottom: 40px;
     position:relative;

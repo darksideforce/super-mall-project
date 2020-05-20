@@ -33,6 +33,7 @@ export default {
     detailclick(index){
       this.currentindex = index
       //点击后动态改变index，从而改变样式
+      this.$emit('titleclick',index)
     },
     backclick(){
       this.$router.back(-1)

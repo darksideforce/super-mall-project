@@ -53,6 +53,7 @@ export default {
     },
     refresh(){
       this.scroll && this.scroll.refresh()
+
     },
     getscrolly(){
       return this.scroll ? tshi.scroll.y :0

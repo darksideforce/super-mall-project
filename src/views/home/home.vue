@@ -23,9 +23,7 @@
                   :goods = "goods[currentType].list"
       ></goods-list><!--这是商品页面  -->
     </scroll>
-    <back-top 
-    @click.native = 'backclick' 
-    v-show = 'backtopshow'></back-top>
+    <back-top @click.native = 'backclick'  v-show = 'backtopshow'></back-top>
     
     
     
@@ -48,6 +46,7 @@ import TabControl from '../../components/content/tabcontrol/TabControl'
 import GoodsList from 'components/content/goods/GoodsList'
 
 import scroll from 'components/common/scroll/scroll'
+import {backTopMixin} from'@/common/mixin'
 
 export default {
 name: "Home",
@@ -61,6 +60,7 @@ components: {
     scroll,
     BackTop
 },
+mixins:[backTopMixin],
 data() {
     return {
     banners: [],
@@ -73,10 +73,10 @@ data() {
       //每当当前页面往下刷新时，page记录当前用户加载到第几页，
       //而list储存的是当前加载了的所有数据
     },
-    backtopshow:false,
     tabOffsetTop:0,
     isTabFixed:false,
     saveY:0,
+    itemimgListener:null
     };
 },
 created(){
@@ -88,11 +88,13 @@ created(){
     this.getHomeGoods('sell')
 },
 mounted(){
-  const refresh = this.debounce(this.$refs.scrolls.refresh,500)
+  let refresh = this.debounce(this.$refs.scrolls.refresh,500)
   //监听事件总线上的事件，重新刷新scroll的长度
-    this.$bus.$on('ItemImageLoad',()=>{
-          refresh()
-        })
+    this.itemimgListener = ()=>{
+      refresh()
+    }
+    //对我们监听的事件进行保存
+    this.$bus.$on('detailItemImgLoad',this.itemimgListener)
 },
 activated() {
   this.$refs.scrolls.scrollTo(0,this.saveY,0)
@@ -101,8 +103,12 @@ activated() {
 //跳转到离开时，scroll记载的滚动位置
 deactivated() {
   this.saveY = this.$refs.scrolls.getscrolly
+  //在离开时，记录滚动的位置
 },
-//在离开时，记录滚动的位置
+destroyed(){
+    this.$bus.$off('detailItemImgLoad',this.itemImgListener)
+  },
+
 methods:{
   /**
    * 事件监听相关方法
@@ -137,16 +143,13 @@ methods:{
     this.$refs.TabControl2.CurrentIndex = index
   },
   //根据点击判断当前选择的tab
-  backclick(){
-    this.$refs.scrolls.scrollTo(0,0,500)
-  },
-  //点击回到首页
   contentscroll(position){
-    //1.根据position来动态显示
-    this.backtopshow = (-position.y)>1000
-    //2.根据offsettop的值来决定是否吸顶
+    //1.根据position来动态显示，方法在mixin中
+    this.listenShowBackTop(position)
+    //2.根据offsettop的值来决定tabcontorl是否吸顶
     this.isTabFixed = (-position.y) > this.tabOffsetTop
   },
+  //点击回到首页已经被整合进mixin中的方法里
   //滚动到一定页面时隐藏插件
   contentpulling(){
     this.getHomeGoods(this.currentType)
@@ -155,6 +158,7 @@ methods:{
   swiperimageload(){
     this.tabOffsetTop = this.$refs.TabControl2.$el.offsetTop
   },
+  //当轮播图加载完毕后，获取到tabcontrol2的offsettop值
   /**
    *网络请求相关代码 
    * */

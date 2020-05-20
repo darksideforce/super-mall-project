@@ -12,9 +12,9 @@
       <span>{{goods.services[goods.services.length-1].name}}</span>
     </div>
     <div class="info-service">
-      <span class="info-service-item" v-for="index in goods.services.length-1" :key="index">
-        <img :src="goods.services[index-1].icon">
-        <span>{{goods.services[index-1].name}}</span>
+      <span class="info-service-item" v-for="indey in goods.services.length-1" :key="indey.index">
+        <img :src="goods.services[indey-1].icon">
+        <span>{{goods.services[indey-1].name}}</span>
       </span>
     </div>
   </div>
@@ -24,7 +24,7 @@
 	export default {
 		name: "DetailBaseInfo",
     props: {
-        goods: {
+        goods:{
         type: Object
       }
     }
