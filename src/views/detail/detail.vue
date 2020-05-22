@@ -151,7 +151,7 @@ export default {
       product.price = this.goods.nowPrice;
       product.iid = this.detailId
       //获取当前页面的商品数据并储存在一个对象内，注意iid一定要传过去
-      this.$store.dispatch('addCart',product)
+         
     }
   },
 

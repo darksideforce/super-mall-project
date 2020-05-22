@@ -1,7 +1,10 @@
 <template>
   <div class ='bottom-menu'>
-    <div class = 'checked'>
-      <check-button class="check-button"></check-button>
+    <div class = 'checked' >
+      <check-button 
+              :ischecked ='isSelectAll'  
+              class="check-button" 
+              @click.native ='checkclick'></check-button>
       <span>全选</span>
     </div>
     <div class = 'selectall'>
@@ -21,6 +24,9 @@ export default {
     CheckButton,
   },
   computed:{
+    cartList() {
+        return this.$store.getters.cartList
+    },
     counterAll(){
       return this.$store.state.cartList.filter((item)=>{
         return item.checked
@@ -33,7 +39,22 @@ export default {
       return this.$store.state.cartList.filter((item)=>{
         return item.checked
       }).length
-    }
+    },
+    isSelectAll() {
+      if(this.cartList.length === 0)return false
+      return !this.cartList.find(item => !item.checked)
+    },
+  },
+    methods: {
+      checkclick(){
+        if (this.isSelectAll){
+          this.cartList.forEach(item => item.checked = false)
+          //全部没有被选中的情况
+        }else{
+          this.cartList.forEach(item => item.checked = true)
+          //部分没有被选中
+        }
+      }
   },
 }
 </script>

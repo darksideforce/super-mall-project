@@ -97,12 +97,15 @@ mounted(){
     this.$bus.$on('detailItemImgLoad',this.itemimgListener)
 },
 activated() {
-  this.$refs.scrolls.scrollTo(0,this.saveY,0)
+  this.$refs.scrolls.scrollTo(0,this.saveY,10)
+  //此处传入的第三个参数time值不能为0，否则会触发bug
   this.$refs.scrolls.refresh()
+  //console.log('重新进入页面的Y值是',this.saveY)
 },
 //跳转到离开时，scroll记载的滚动位置
 deactivated() {
-  this.saveY = this.$refs.scrolls.getscrolly
+  this.saveY = this.$refs.scrolls.getscrolly()
+  //console.log('离开页面的Y值是',this.saveY)
   //在离开时，记录滚动的位置
 },
 destroyed(){

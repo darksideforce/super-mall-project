@@ -44,19 +44,21 @@ export default {
     })
   },
   methods:{
-    scrollTo(x,y,time=300){
-      this.scroll && this.scroll.scrollTo(x,y,time)
+    scrollTo(x, y,time=300){
+      this.scroll.scrollTo(x , y, time)
       //定义一个scroll方法，调用当前作用域下的scroll对象。执行他的方法，并传入相关参数
+      //console.log('正在跳转到',y,'值')
     },
     finishPullUp(){
       this.scroll && this.scroll.finishPullUp()
     },
     refresh(){
       this.scroll && this.scroll.refresh()
+      console.log('refresh')
 
     },
     getscrolly(){
-      return this.scroll ? tshi.scroll.y :0
+      return this.scroll ? this.scroll.y :0
       //意思是，如果scroll无值，则返回0，如果有值，则返回y值
     }
   }
