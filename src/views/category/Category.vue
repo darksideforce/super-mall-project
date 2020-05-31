@@ -1,124 +1,149 @@
 <template>
-    <div><h2>分类</h2>
-    <div class = 'wrapper' ref = 'aaa' >
-      <ul class = 'content'>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-        <li>列表1</li>
-      </ul>
-    </div>
+    <div class='category'>
+      <nav-bar class='navbar'>
+        <div slot='center'>商品分类</div>
+      </nav-bar>
+      <div class='titles'>
+        <tab-menu :categories='categories' @selectindex = 'selectindex'></tab-menu>
+      </div>
+      <scroll class='items'>
+        <scroll class='content'>
+          <tab-items  :categorylistdata="showcategories"></tab-items>
+          <tab-control :titles = "['流行','新款','精选']" @tabclick='tabclick'></tab-control>
+          <good-list :goods='showdetail'></good-list>
+        </scroll>  
+      </scroll>
     </div>
 </template>
 
+
+
 <script>
+import NavBar from 'components/common/navbar/NavBar'
 import BScroll from 'better-scroll'
+import scroll from 'components/common/scroll/scroll'
+import TabControl from 'components/content/tabcontrol/TabControl'
+import GoodList from 'components/content/goods/GoodsList'
+
+import TabMenu from './childcate/TabMenu'
+import TabItems from './childcate/TabItems'
+
+
+import {getCategorylistname,
+        getSubcategory,
+        getCategoryDetail
+        } from 'network/category';
+
+
 export default {
     name:'Category',
+    components:{
+      NavBar,
+      TabMenu,
+      TabItems,
+      scroll,
+      TabControl,
+      GoodList
+    },
     data(){
       return{
-        scroll:null
+        scroll:null,
+        categories:[],
+        //分类名
+        categorylistdata:{},
+        //分类内的商品
+        currentindex:0,
+        //侧边栏的index
+        categorylistdetail:[],
+        //商品下的精品数据等
+        currenttype:'pop',
       }
     },
-    mounted(){
-      this.scroll = new BScroll(this.$refs.aaa,{
-        probeType:3,
-        pullUpLoad:true
-      })
-      this.scroll.on('scroll',(position)=>{
-        console.log(position);
-      })
-      this.scroll.on('pullingUp',()=>{
-        console.log('上拉加载更多')
-      }),
-      this.scroll.refresh()
+    created(){
+      this._getcartgory()
     },
-    destroyed(){
-      console.log('home destoryed')
+    computed:{
+      showcategories(){
+        return this.categorylistdata[this.currentindex].subcategories
+      },
+      showdetail(){
+        return this.categorylistdata[this.currentindex].categoryDetail[this.currenttype]
+      }
+    },
+    methods:{
+      /**
+       * 网络请求
+       */
+      _getcartgory(){
+        //请求侧边栏的标题和初始化一个数组
+        getCategorylistname().then(res=>{
+          this.categories = res.data.category.list
+          //console.log(this.categories);
+          //这个数组是用来接受分类名的，但是分类名还是需要内容，所以在下面初始化
+          for(let i=0 ; i < this.categories.length ; i++ ){
+            this.categorylistdata[i] = {
+              subcategories: {},
+              categoryDetail:{
+                'pop':[],
+                'new':[],
+                'sell':[],
+                //初始化对象，创建出一个有着与categories同样长度的数组，每个成员都有3个小数组
+              }
+            }
+          }
+          console.log(this.categorylistdata)
+          this.getSubcategories(0)
+        })
+      },
+      getSubcategories(index) {
+        this.currentindex = index;
+        const mailKey = this.categories[index].maitKey;
+        getSubcategory(mailKey).then(res => {
+          this.categorylistdata[index].subcategories = res.data
+          this.getSubcategoriesdetail('pop')
+        })
+      },
+      getSubcategoriesdetail(type){
+        const miniWallkey = this.categories[this.currentindex].miniWallkey
+        getCategoryDetail(miniWallkey,type).then( res=>{
+          this.categorylistdata[this.currentindex].categoryDetail[type] = res
+        })
+      },
+      /**
+       * 点击事件
+       */
+      selectindex(index){
+        this.getSubcategories(index)
+      },
+      tabclick(index){
+        const tlist =['pop','new','sell'];
+        this.currenttype = tlist[index]
+        this.getSubcategoriesdetail(this.currenttype)
+      }
+      
     }
+
 }
 </script>
 <style scoped>
-.wrapper{
-  height:140px;
-  background-color: red;
+.category{
+  width:100%;
+  height:100%;
+}
+.navbar{
+  overflow: hidden;
+  background-color: #ff8198;
+  color: #fff;
+}
+.tltle{
+  position: relative;
+  top:44px
+}
+.items{
+  position:fixed;
+  top:44px;
+  left:100px;
+  bottom:49px;
   overflow: hidden;
 }
 </style scoped>

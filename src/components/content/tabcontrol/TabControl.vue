@@ -1,8 +1,7 @@
 <template>
   <div class='tabcontrol'>
     <!--接受父组件传来的数组，使用v-for而不是使用slot来进行显示-->
-    <div v-for = "(item,index) in titles" 
-    :key = 'item.count'
+    <div v-for = "(item,index) in titles" :key = 'item.count'
     class ='tab-control-item'
     :class="{active: index === CurrentIndex }"
     @click ='itemclick(index)'>

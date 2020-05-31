@@ -15,6 +15,7 @@
     </scroll>
     <back-top @click.native = 'backclick' v-show = 'backtopshow'></back-top>
     <detail-bottom-bar @addToCart = 'addToCart'></detail-bottom-bar>
+    <toast :isToastShow='isToastShow' :message="message"></toast>
   </div>
 </template>
 
@@ -30,6 +31,7 @@ import DetailCommentInfo from './childComs/DetailCommentInfo'
 import GoodsList from 'components/content/goods/GoodsList'
 import DetailBottomBar from './childComs/DetailBottomBar'
 import  BackTop from 'components/content/backTop/BackTop'
+import Toast from 'components/common/toast/toast'
 
 import scroll from 'components/common/scroll/scroll'
 
@@ -39,6 +41,7 @@ import {itemListenerMixin,backTopMixin} from'@/common/mixin'
 export default {
   name:'Detail',
   components:{
+    Toast,
     DetailNavBar,
     DetailSwiper,
     DetailBaseInfo,
@@ -53,6 +56,8 @@ export default {
   mixins:[itemListenerMixin,backTopMixin],
   data(){
     return{
+      message:'',
+      isToastShow:false,
       detailId:0,
       topImages:[],
       res:{},
@@ -151,7 +156,15 @@ export default {
       product.price = this.goods.nowPrice;
       product.iid = this.detailId
       //获取当前页面的商品数据并储存在一个对象内，注意iid一定要传过去
-         
+      this.$store.dispatch('addCart', product).then(res=>{
+        this.isToastShow = true;
+        this.message = res;
+        setTimeout(()=>{
+          this.isToastShow=false;
+          this.message = ' ';
+
+        },1500)
+      })
     }
   },
 
