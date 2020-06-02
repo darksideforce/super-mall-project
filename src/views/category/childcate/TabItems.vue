@@ -2,7 +2,7 @@
   <div class='content'>
     <div class='item' v-for='(item,index) in categorylistdata.list' :key = index>
       <a :href="item.link" class='link'>
-          <img class="item-img" :src="item.image" alt="">
+          <img class="item-img" :src="item.image" alt="" @load='itemload'>
       </a>
       <p class="item-text">{{item.title}}</p>
     </div>
@@ -19,6 +19,11 @@ export default {
       default(){
         return [] 
       }
+    }
+  },
+  methods:{
+    itemload(){
+      this.$emit('itemload')
     }
   }
 }

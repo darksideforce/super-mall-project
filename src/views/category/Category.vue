@@ -7,8 +7,8 @@
         <tab-menu :categories='categories' @selectindex = 'selectindex'></tab-menu>
       </div>
       <scroll class='items'>
-        <scroll class='content'>
-          <tab-items  :categorylistdata="showcategories"></tab-items>
+        <scroll class='content' ref='scrolls'>
+          <tab-items  :categorylistdata="showcategories" ></tab-items>
           <tab-control :titles = "['流行','新款','精选']" @tabclick='tabclick'></tab-control>
           <good-list :goods='showdetail'></good-list>
         </scroll>  
@@ -33,7 +33,7 @@ import {getCategorylistname,
         getSubcategory,
         getCategoryDetail
         } from 'network/category';
-
+import {debounce} from '@/common/utils'
 
 export default {
     name:'Category',
@@ -52,22 +52,32 @@ export default {
         //分类名
         categorylistdata:{},
         //分类内的商品
-        currentindex:0,
+        currentindex:-1,
         //侧边栏的index
         categorylistdetail:[],
         //商品下的精品数据等
         currenttype:'pop',
+        itemimglistener:null,
+        dates:null,
       }
     },
     created(){
       this._getcartgory()
+      this.dates = new Date()
+    },
+    mounted(){
+      
     },
     computed:{
       showcategories(){
+        if (this.currentindex === -1) return {}
         return this.categorylistdata[this.currentindex].subcategories
       },
       showdetail(){
+        if (this.currentindex === -1) return []
+        //用来避免第一次进入页面时报错。可能是因为请求速度慢于创建速度 
         return this.categorylistdata[this.currentindex].categoryDetail[this.currenttype]
+        //用于传入储存了数据的数组
       }
     },
     methods:{
@@ -91,7 +101,6 @@ export default {
               }
             }
           }
-          console.log(this.categorylistdata)
           this.getSubcategories(0)
         })
       },
@@ -100,7 +109,10 @@ export default {
         const mailKey = this.categories[index].maitKey;
         getSubcategory(mailKey).then(res => {
           this.categorylistdata[index].subcategories = res.data
+          this.categorylistdata = {...this.categorylistdata}
           this.getSubcategoriesdetail('pop')
+          this.getSubcategoriesdetail('new')
+          this.getSubcategoriesdetail('sell')
         })
       },
       getSubcategoriesdetail(type){
@@ -119,8 +131,7 @@ export default {
         const tlist =['pop','new','sell'];
         this.currenttype = tlist[index]
         this.getSubcategoriesdetail(this.currenttype)
-      }
-      
+      },
     }
 
 }

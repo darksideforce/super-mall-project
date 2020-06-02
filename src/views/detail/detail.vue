@@ -162,7 +162,6 @@ export default {
         setTimeout(()=>{
           this.isToastShow=false;
           this.message = ' ';
-
         },1500)
       })
     }
